@@ -1,5 +1,5 @@
 from bancos import *
-
+from dados import *
 
 # ==============================
 # TESTES
@@ -78,5 +78,13 @@ banco_do_brasil.cadastrar_usuario(usuario3)
 santander.cadastrar_usuario(usuario4)
 
 
-banco_do_brasil.lista_users()
 
+
+# salvar_pessoa(pessoa3)
+
+# buscar_pessoa(12345678900)
+# buscar_pessoa(98765432100)
+
+#listar_pessoas()
+
+deletar_pessoa(98765432100)
