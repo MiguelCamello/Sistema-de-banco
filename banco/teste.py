@@ -78,13 +78,20 @@ banco_do_brasil.cadastrar_usuario(usuario3)
 santander.cadastrar_usuario(usuario4)
 
 
+criar_tabela_pessoa()
+criar_tabela_usuario()
 
-
+# salvar_pessoa(pessoa1)
+# salvar_pessoa(pessoa2)
 # salvar_pessoa(pessoa3)
+# salvar_pessoa(pessoa4)
+
 
 # buscar_pessoa(12345678900)
 # buscar_pessoa(98765432100)
 
-#listar_pessoas()
+# listar_pessoas()
 
-deletar_pessoa(98765432100)
+# deletar_pessoa(98765432100)
+
+salvar_usuario(usuario1)

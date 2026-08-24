@@ -11,10 +11,10 @@ def criar_tabela_pessoa():
     with sqlite3.connect(BANCO) as conexao:
         conexao.execute("""
         CREATE TABLE IF NOT EXISTS pessoas (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             cpf TEXT UNIQUE NOT NULL,
-            idade INTEGER,
+            idade INTEGER NOT NULL,
             genero TEXT,
             telefone TEXT
         )
@@ -82,4 +82,38 @@ def buscar_pessoa(pessoaCPF):
 ================================
 """)
     
+# User
 
+def criar_tabela_usuario():
+    with sqlite3.connect(BANCO) as conexao:
+        conexao.execute("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            cpf TEXT UNIQUE NOT NULL,
+            idade INTEGER NOT NULL,
+            genero TEXT,
+            telefone TEXT,
+            email TEXT NOT NULL,
+            senha TEXT NOT NULL,
+            saldo INTEGER,
+            divida INTEGER
+        )
+        """)
+
+def salvar_usuario(usuario):
+    with sqlite3.connect(BANCO) as conexao:
+        conexao.execute("""
+            INSERT INTO usuarios
+            (nome, cpf, idade, genero, telefone, email, senha, saldo, divida)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""", (
+                usuario.pessoa.nome,
+                usuario.pessoa.cpf,
+                usuario.pessoa.idade,
+                usuario.pessoa.genero,
+                usuario.pessoa.telefone,
+                usuario.email,
+                usuario.senha,
+                usuario.saldo,
+                usuario.divida
+            ))
