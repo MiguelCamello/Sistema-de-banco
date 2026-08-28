@@ -8,34 +8,34 @@ from dados import *
 # Pessoas
 pessoa1 = Pessoa(
     "Miguel Lima",
-    "12345678900",
+    "123.456.789.00",
     20,
     "Masculino",
-    "11999999999"
+    "(14)99999-9999"
 )
 
 pessoa2 = Pessoa(
     "João Silva",
-    "98765432100",
+    "987.654.321.00",
     25,
     "Masculino",
-    "11988888888"
+    "(14)98888-8888"
 )
 
 pessoa3 = Pessoa(
     "Maria Santos",
-    "45678912300",
+    "456.789.123.00",
     32,
     "Feminino",
-    "11977777777"
+    "(14)97777-7777"
 )
 
 pessoa4 = Pessoa(
     "Ana Oliveira",
-    "32165498700",
+    "321.654.987.00",
     28,
     "Feminino",
-    "11966666666"
+    "(14)96666-6666"
 )
 
 
@@ -87,11 +87,15 @@ criar_tabela_usuario()
 # salvar_pessoa(pessoa4)
 
 
-# buscar_pessoa(12345678900)
-# buscar_pessoa(98765432100)
+# # buscar_pessoa('12345678900')
+# # buscar_pessoa('98765432100')
 
-# listar_pessoas()
+# # listar_pessoas()
 
-# deletar_pessoa(98765432100)
+# # deletar_pessoa('98765432100')
 
-salvar_usuario(usuario1)
+# salvar_usuario(usuario1)
+# salvar_usuario(usuario2)
+# salvar_usuario(usuario3)
+# salvar_usuario(usuario4)
+buscar_usuario('123.456.789.00')
