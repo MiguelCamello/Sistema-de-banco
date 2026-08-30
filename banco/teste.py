@@ -11,7 +11,6 @@ pessoa1 = Pessoa(
     "123.456.789.00",
     20,
     "Masculino",
-    "(14)99999-9999"
 )
 
 pessoa2 = Pessoa(
@@ -19,7 +18,6 @@ pessoa2 = Pessoa(
     "987.654.321.00",
     25,
     "Masculino",
-    "(14)98888-8888"
 )
 
 pessoa3 = Pessoa(
@@ -27,7 +25,6 @@ pessoa3 = Pessoa(
     "456.789.123.00",
     32,
     "Feminino",
-    "(14)97777-7777"
 )
 
 pessoa4 = Pessoa(
@@ -35,31 +32,34 @@ pessoa4 = Pessoa(
     "321.654.987.00",
     28,
     "Feminino",
-    "(14)96666-6666"
 )
 
 
 # Usuários
 usuario1 = Usuario(
     pessoa1,
+    "(14)99999-9999",
     "miguel@email.com",
     "1234"
 )
 
 usuario2 = Usuario(
     pessoa2,
+    "(14)98888-8888",
     "joao@email.com",
     "5678"
 )
 
 usuario3 = Usuario(
     pessoa3,
+    "(14)97777-7777",
     "maria@email.com",
     "abcd"
 )
 
 usuario4 = Usuario(
     pessoa4,
+    "(14)96666-6666",
     "ana@email.com",
     "senha123"
 )
@@ -78,6 +78,7 @@ banco_do_brasil.cadastrar_usuario(usuario3)
 santander.cadastrar_usuario(usuario4)
 
 
+
 criar_tabela_pessoa()
 criar_tabela_usuario()
 
@@ -86,16 +87,13 @@ criar_tabela_usuario()
 # salvar_pessoa(pessoa3)
 # salvar_pessoa(pessoa4)
 
-
-# # buscar_pessoa('12345678900')
-# # buscar_pessoa('98765432100')
-
-# # listar_pessoas()
-
-# # deletar_pessoa('98765432100')
-
 # salvar_usuario(usuario1)
 # salvar_usuario(usuario2)
 # salvar_usuario(usuario3)
 # salvar_usuario(usuario4)
-buscar_usuario('123.456.789.00')
+
+# buscar_pessoa('321.654.987.00')
+# buscar_usuario(4)
+
+# listar_pessoas()
+# listar_usuario()

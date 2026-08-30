@@ -1,11 +1,10 @@
 class Pessoa:
-    def __init__(self, nome, cpf, idade, genero, telefone):
+    def __init__(self, nome, cpf, idade, genero):
         self.nome = nome
-        self.genero = genero
         self.cpf = str(cpf)
         self.idade = int(idade)
-        self.telefone = str(telefone)
-
+        self.genero = genero
+        
 class Banco:
     def __init__(self, nome):
         self.nome = nome
@@ -55,8 +54,9 @@ class Banco:
         """)
 
 class Usuario:
-    def __init__(self, pessoa, email, senha):
+    def __init__(self, pessoa, telefone, email, senha):
         self.pessoa = pessoa # usuario.pessoa.nome
+        self.telefone = telefone
         self.email = email
         self.senha = senha 
         self.saldo = 0
