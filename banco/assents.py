@@ -1,1 +1,0 @@
-# coisas uteis, strings ou funçoes mt simples

@@ -1,8 +1,12 @@
-from bancos import *
-from dados import *
+from models import Pessoa, Usuario, Funcionario, Banco
+from  database.pessoas_db import *
+from  database.usuarios_db import *
+from  database.funcionarios_db import *
+from  database.bancos_db import *
+
 
 # ==============================
-# TESTES
+#            TESTES
 # ==============================
 
 # Pessoas
@@ -37,31 +41,46 @@ pessoa4 = Pessoa(
 
 # Usuários
 usuario1 = Usuario(
-    pessoa1,
+    1,
     "(14)99999-9999",
     "miguel@email.com",
     "1234"
 )
 
 usuario2 = Usuario(
-    pessoa2,
+    2,
     "(14)98888-8888",
     "joao@email.com",
     "5678"
 )
 
 usuario3 = Usuario(
-    pessoa3,
+    3,
     "(14)97777-7777",
     "maria@email.com",
     "abcd"
 )
 
 usuario4 = Usuario(
-    pessoa4,
+    4,
     "(14)96666-6666",
     "ana@email.com",
     "senha123"
+)
+usuario5 = Usuario(
+    4,
+    "(14)99899-8780",
+    "miguel@gmail.com",
+    "#123"
+)
+
+# funcionarios
+
+funcionario1 = Funcionario(
+    1,
+    "dev@gmail",
+    "senhaDev",
+    1500
 )
 
 
@@ -77,6 +96,10 @@ banco_do_brasil.cadastrar_usuario(usuario3)
 
 santander.cadastrar_usuario(usuario4)
 
+# Contratar funcionarios
+santander.contratar_funcionario(funcionario1)
+
+
 
 
 criar_tabela_pessoa()
@@ -91,9 +114,13 @@ criar_tabela_usuario()
 # salvar_usuario(usuario2)
 # salvar_usuario(usuario3)
 # salvar_usuario(usuario4)
+# salvar_usuario(usuario5)
 
 # buscar_pessoa('321.654.987.00')
 # buscar_usuario(4)
 
 # listar_pessoas()
-# listar_usuario()
+listar_usuario()
+
+
+# usar 'python -m test.teste' no cmd
