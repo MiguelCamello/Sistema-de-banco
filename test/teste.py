@@ -116,11 +116,13 @@ criar_tabela_usuario()
 # salvar_usuario(usuario4)
 # salvar_usuario(usuario5)
 
+deletar_pessoa('321.654.987.00')
+
 # buscar_pessoa('321.654.987.00')
 # buscar_usuario(4)
 
 # listar_pessoas()
-listar_usuario()
+# listar_usuario()
 
 
 # usar 'python -m test.teste' no cmd

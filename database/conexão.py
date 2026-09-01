@@ -7,4 +7,6 @@ PASTA_DATA.mkdir(parents=True, exist_ok=True)
 BANCO = PASTA_DATA / "banco.db"
 
 def conectar():
-    return sqlite3.connect(BANCO)
+    conexao = sqlite3.connect(BANCO)
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao

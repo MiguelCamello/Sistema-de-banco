@@ -4,51 +4,55 @@ def criar_tabela_usuario():
     with conectar() as conexao:
         conexao.execute("""
             CREATE TABLE IF NOT EXISTS usuarios (
-                usuario_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 pessoa_id INTEGER NOT NULL,
-                usuario_telefone TEXT,
-                usuario_email TEXT NOT NULL,
-                usuario_senha TEXT NOT NULL,
-                usuario_senha_hash TEXT NOT NULL,
-                usuario_saldo INTEGER,
-                usuario_divida INTEGER,
+                telefone TEXT,
+                email TEXT NOT NULL,
+                senha TEXT NOT NULL,
+                senha_hash TEXT NOT NULL,
+                saldo INTEGER,
+                divida INTEGER,
 
-                FOREIGN KEY (pessoa_id) REFERENCES pessoas(pessoa_id)
+                FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
+                    ON DELETE CASCADE
         )
         """)
 
-def salvar_usuario(usuario):
+def salvar_usuario(obj_usuario):
     with conectar() as conexao:
         conexao.execute("""
             INSERT INTO usuarios
-            (pessoa_id, usuario_telefone, usuario_email, usuario_senha, usuario_senha_hash, usuario_saldo, usuario_divida)
+            (pessoa_id, telefone, email, senha, senha_hash, saldo, divida)
             VALUES (?, ?, ?, ?, ?, ?, ?)""", (
-                usuario.pessoa_id,
-                usuario.telefone,
-                usuario.email,
-                usuario.senha,
-                usuario.senha_hash,
-                usuario.saldo,
-                usuario.divida
+                obj_usuario.pessoa_id,
+                obj_usuario.telefone,
+                obj_usuario.email,
+                obj_usuario.senha,
+                obj_usuario.senha_hash,
+                obj_usuario.saldo,
+                obj_usuario.divida
         ))
+
+def deletar_usuario(usuarioID): # vai apagar todos os usuarios dependentes da pessoa
+    with conectar() as conexao:
+        conexao.execute("""
+DELETE FROM usuarios WHERE id = ?
+""", (usuarioID,))
         
-def buscar_usuario(usuarioID):    # Pode ser otimizado mais tarde usando JOIN, só falta aprender usar!!!!!!
+def buscar_usuario(usuarioID):
     with conectar() as conexao:
         usuario_busca = conexao.execute("""
-            SELECT
-            usuario_id, pessoa_id, usuario_telefone, usuario_email, usuario_senha_hash, usuario_saldo, usuario_divida
-            FROM usuarios WHERE usuario_id = ?
-            """, (usuarioID,)).fetchone()
-        usuario_id, pessoa_id, telefone, email, senha_hash, saldo, divida = usuario_busca
-
-        pessoa_busca = conexao.execute("""
-            SELECT pessoa_nome, pessoa_cpf, pessoa_idade, pessoa_genero FROM pessoas WHERE pessoa_id = ?   
-            """, (pessoa_id,)).fetchone()
-        nome, cpf, idade, genero = pessoa_busca
-
+        SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
+        FROM usuarios AS u
+        JOIN pessoas AS p
+            ON u.pessoa_id = p.id
+        WHERE u.id = ?
+        """, (usuarioID,)).fetchone()
+    u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = usuario_busca
+    
     print(f"""
 ================================
-|   DADOS DO USUARIO  ID: {usuario_id:<5}|
+|   DADOS DO USUARIO  ID: {u_id:<5}|
 ================================
 |                              |
 |   Nome: {nome:<21}|  
@@ -65,24 +69,21 @@ def buscar_usuario(usuarioID):    # Pode ser otimizado mais tarde usando JOIN, s
 ================================
 """)
         
-def listar_usuario():
+def listar_usuario(): 
     with conectar() as conexao:
         usuario_lista = conexao.execute("""
-            SELECT
-            usuario_id, pessoa_id, usuario_telefone, usuario_email, usuario_senha_hash, usuario_saldo, usuario_divida
-            FROM usuarios
+                SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
+                FROM usuarios AS u
+                JOIN pessoas AS p
+                    ON u.pessoa_id = p.id;
             """).fetchall()
-        
-    for user in usuario_lista:
-        usuario_id, pessoa_id, telefone, email, senha_hash, saldo, divida = user
 
-        pessoa_busca = conexao.execute("""
-            SELECT pessoa_nome, pessoa_cpf, pessoa_idade, pessoa_genero FROM pessoas WHERE pessoa_id = ?
-            """, (pessoa_id,)).fetchone()
-        nome, cpf, idade, genero = pessoa_busca
+    for user in usuario_lista:
+        u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = user
+
         print(f"""
 ================================
-|   DADOS DO USUARIO  ID: {usuario_id:<5}|
+|   DADOS DO USUARIO  ID: {u_id:<5}|
 ================================
 |                              |
 |   Nome: {nome:<21}|  

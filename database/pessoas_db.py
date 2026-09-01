@@ -4,19 +4,19 @@ def criar_tabela_pessoa():
     with conectar() as conexao:
         conexao.execute("""
             CREATE TABLE IF NOT EXISTS pessoas (
-                pessoa_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                pessoa_nome TEXT NOT NULL,
-                pessoa_cpf TEXT UNIQUE NOT NULL,
-                pessoa_idade INTEGER NOT NULL,
-                pessoa_genero TEXT
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                cpf TEXT UNIQUE NOT NULL,
+                idade INTEGER NOT NULL,
+                genero TEXT
             )
             """)
 
 def salvar_pessoa(pessoa):
     with conectar() as conexao:
-        cursor = conexao.execute("""
+        conexao.execute("""
             INSERT INTO pessoas 
-            (pessoa_nome, pessoa_cpf, pessoa_idade, pessoa_genero)
+            (nome, cpf, idade, genero)
             VALUES (?, ?, ?, ?)
             """, (
                 pessoa.nome,
@@ -24,13 +24,11 @@ def salvar_pessoa(pessoa):
                 pessoa.idade,
                 pessoa.genero
             ))
-        pessoa.pessoa_id = cursor.lastrowid
-
 
 def deletar_pessoa(pessoaCpf):
     with conectar() as conexao:
         conexao.execute("""
-            DELETE FROM pessoas WHERE pessoa_cpf = ?
+            DELETE FROM pessoas WHERE cpf = ?
             """, (pessoaCpf,))
 
 def listar_pessoas():
@@ -40,10 +38,10 @@ def listar_pessoas():
             """).fetchall()
             
         for pessoa in lista:
-            id, nome, cpf, idade, genero = pessoa
+            p_id, nome, cpf, idade, genero = pessoa
             print(f"""
 ================================
-|   DADOS DA PESSOA   ID: {id:<5}|
+|   DADOS DA PESSOA   ID: {p_id:<5}|
 ================================
 |                              |
 |   Nome: {nome:<21}|  
@@ -57,12 +55,12 @@ def listar_pessoas():
 def buscar_pessoa(pessoaCPF):
     with conectar() as conexao:
         pessoa_busca = conexao.execute("""
-            SELECT * FROM pessoas WHERE pessoa_cpf = ?
+            SELECT * FROM pessoas WHERE cpf = ?
             """, (pessoaCPF,)).fetchone()
-    pessoa_id, nome, cpf, idade, genero = pessoa_busca
+    p_id, nome, cpf, idade, genero = pessoa_busca
     print(f"""
 ================================
-|   DADOS DA PESSOA   ID: {pessoa_id:<5}|
+|   DADOS DA PESSOA   ID: {p_id:<5}|
 ================================
 |                              |
 |   Nome: {nome:<21}|  
