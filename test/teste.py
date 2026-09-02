@@ -1,128 +1,216 @@
-from models import Pessoa, Usuario, Funcionario, Banco
-from  database.pessoas_db import *
-from  database.usuarios_db import *
-from  database.funcionarios_db import *
-from  database.bancos_db import *
+import random
 
+from models.bancos import Banco
+from models.pessoas import Pessoa
+from models.usuarios import Usuario
+from models.funcionarios import Funcionario
 
-# ==============================
-#            TESTES
-# ==============================
-
-# Pessoas
-pessoa1 = Pessoa(
-    "Miguel Lima",
-    "123.456.789.00",
-    20,
-    "Masculino",
+from database.bancos_db import (
+    criar_tabela_bancos,
+    salvar_banco
 )
 
-pessoa2 = Pessoa(
-    "João Silva",
-    "987.654.321.00",
-    25,
-    "Masculino",
+from database.pessoas_db import (
+    criar_tabela_pessoas,
+    salvar_pessoa
 )
 
-pessoa3 = Pessoa(
-    "Maria Santos",
-    "456.789.123.00",
-    32,
-    "Feminino",
+from database.usuarios_db import (
+    criar_tabela_usuarios,
+    salvar_usuario
 )
 
-pessoa4 = Pessoa(
-    "Ana Oliveira",
-    "321.654.987.00",
-    28,
-    "Feminino",
+from database.funcionarios_db import (
+    criar_tabela_funcionarios,
+    salvar_funcionario
 )
 
 
-# Usuários
-usuario1 = Usuario(
-    1,
-    "(14)99999-9999",
-    "miguel@email.com",
-    "1234"
-)
-
-usuario2 = Usuario(
-    2,
-    "(14)98888-8888",
-    "joao@email.com",
-    "5678"
-)
-
-usuario3 = Usuario(
-    3,
-    "(14)97777-7777",
-    "maria@email.com",
-    "abcd"
-)
-
-usuario4 = Usuario(
-    4,
-    "(14)96666-6666",
-    "ana@email.com",
-    "senha123"
-)
-usuario5 = Usuario(
-    4,
-    "(14)99899-8780",
-    "miguel@gmail.com",
-    "#123"
-)
-
-# funcionarios
-
-funcionario1 = Funcionario(
-    1,
-    "dev@gmail",
-    "senhaDev",
-    1500
-)
+def criar_tabelas():
+    criar_tabela_bancos()
+    criar_tabela_pessoas()
+    criar_tabela_usuarios()
+    criar_tabela_funcionarios()
 
 
-# Bancos
-banco_do_brasil = Banco("Banco do Brasil")
-santander = Banco("Santander")
+def gerar_dados(
+    quantidade_bancos=5,
+    quantidade_pessoas=10,
+    quantidade_usuarios=7,
+    quantidade_funcionarios=3
+):
+
+    # =========================
+    # TABELAS
+    # =========================
+
+    criar_tabelas()
+
+    # =========================
+    # BANCOS
+    # =========================
+
+    nomes_bancos = [
+        "Banco do Brasil",
+        "Santander",
+        "Itaú",
+        "Bradesco",
+        "Nubank"
+    ]
+
+    bancos_ids = []
+
+    for nome in nomes_bancos[:quantidade_bancos]:
+
+        banco = Banco(nome)
+
+        banco_id = salvar_banco(banco)
+
+        bancos_ids.append(banco_id)
+
+    print(f"{len(bancos_ids)} bancos criados.")
 
 
-# Cadastrando usuários
-banco_do_brasil.cadastrar_usuario(usuario1)
-banco_do_brasil.cadastrar_usuario(usuario2)
-banco_do_brasil.cadastrar_usuario(usuario3)
+    # =========================
+    # PESSOAS
+    # =========================
 
-santander.cadastrar_usuario(usuario4)
+    nomes = [
+        "Miguel",
+        "João",
+        "Pedro",
+        "Lucas",
+        "Gabriel",
+        "Arthur",
+        "Rafael",
+        "Gustavo",
+        "Felipe",
+        "Matheus",
+        "Bruno",
+        "Daniel",
+        "Henrique",
+        "Leonardo",
+        "André",
+        "Carlos",
+        "Eduardo",
+        "Marcos",
+        "Thiago",
+        "Victor"
+    ]
 
-# Contratar funcionarios
-santander.contratar_funcionario(funcionario1)
+    sobrenomes = [
+        "Silva",
+        "Santos",
+        "Oliveira",
+        "Souza",
+        "Pereira",
+        "Costa",
+        "Rodrigues",
+        "Almeida",
+        "Nascimento",
+        "Lima"
+    ]
+
+    generos = [
+        "Masculino",
+        "Feminino"
+    ]
+
+    pessoas_ids = []
+
+    for i in range(quantidade_pessoas):
+
+        nome = f"{random.choice(nomes)} {random.choice(sobrenomes)}"
+
+        # CPF fictício e único
+        cpf = f"{10000000000 + i}"
+
+        idade = random.randint(18, 70)
+
+        genero = random.choice(generos)
+
+        pessoa = Pessoa(
+            nome,
+            cpf,
+            idade,
+            genero
+        )
+
+        pessoa_id = salvar_pessoa(pessoa)
+
+        pessoas_ids.append(pessoa_id)
+
+    print(f"{len(pessoas_ids)} pessoas criadas.")
 
 
+    # =========================
+    # USUÁRIOS
+    # =========================
+
+    usuarios_ids = []
+
+    for i in range(quantidade_usuarios):
+
+        pessoa_id = pessoas_ids[i]
+
+        banco_id = random.choice(bancos_ids)
+
+        telefone = f"1199{random.randint(1000000, 9999999)}"
+
+        email = f"usuario{i + 1}@email.com"
+
+        senha = "123456"
+
+        usuario = Usuario(
+            pessoa_id,
+            banco_id,
+            telefone,
+            email,
+            senha
+        )
+
+        # Coloca alguns valores diferentes
+        usuario.saldo = random.randint(0, 10000)
+        usuario.divida = random.randint(0, 2000)
+
+        salvar_usuario(usuario)
+
+    print(f"{quantidade_usuarios} usuários criados.")
 
 
-criar_tabela_pessoa()
-criar_tabela_usuario()
+    # =========================
+    # FUNCIONÁRIOS
+    # =========================
 
-# salvar_pessoa(pessoa1)
-# salvar_pessoa(pessoa2)
-# salvar_pessoa(pessoa3)
-# salvar_pessoa(pessoa4)
+    for i in range(quantidade_funcionarios):
 
-# salvar_usuario(usuario1)
-# salvar_usuario(usuario2)
-# salvar_usuario(usuario3)
-# salvar_usuario(usuario4)
-# salvar_usuario(usuario5)
+        # Usamos outras pessoas
+        pessoa_id = pessoas_ids[
+            quantidade_usuarios + i
+        ]
 
-deletar_pessoa('321.654.987.00')
+        banco_id = random.choice(bancos_ids)
 
-# buscar_pessoa('321.654.987.00')
-# buscar_usuario(4)
+        email = f"funcionario{i + 1}@banco.com"
 
-# listar_pessoas()
-# listar_usuario()
+        senha = "123456"
 
+        salario = random.randint(2000, 10000)
 
-# usar 'python -m test.teste' no cmd
+        funcionario = Funcionario(
+            pessoa_id,
+            banco_id,
+            email,
+            senha,
+            salario
+        )
+
+        salvar_funcionario(funcionario)
+
+    print(f"{quantidade_funcionarios} funcionários criados.")
+
+    print("\n==============================")
+    print("     DADOS GERADOS!")
+    print("==============================")
+
+gerar_dados()

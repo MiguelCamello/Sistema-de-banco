@@ -1,8 +1,11 @@
+from utils import hasher
+
 class Funcionario:
-    def __init__(self, pessoa_id, email, senhaDev, salario):
+    def __init__(self, pessoa_id, banco_id, emailStaff, senhaStaff, salario):
         self.pessoa_id = pessoa_id
-        self.email = email
-        self.senhaDev = senhaDev
+        self.banco_id = banco_id
+        self.emailStaff = emailStaff
+        self.senhaStaff_hash = hasher(senhaStaff)
         self.salario = int(salario)
 
     def aumento(self, valor):

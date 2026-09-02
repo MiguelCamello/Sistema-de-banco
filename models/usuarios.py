@@ -1,11 +1,11 @@
 from utils import hasher
 
 class Usuario:
-    def __init__(self, pessoa_id, telefone, email, senha):
+    def __init__(self, pessoa_id, banco_id, telefone, email, senha):
         self.pessoa_id = pessoa_id
+        self.banco_id = banco_id
         self.telefone = telefone
         self.email = email
-        self.senha = senha
         self.senha_hash = hasher(senha)
         self.saldo = 0
         self.divida = 0

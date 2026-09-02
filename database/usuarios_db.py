@@ -1,53 +1,56 @@
 from .conexão import conectar
 
-def criar_tabela_usuario():
+def criar_tabela_usuarios():
     with conectar() as conexao:
         conexao.execute("""
             CREATE TABLE IF NOT EXISTS usuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 pessoa_id INTEGER NOT NULL,
+                banco_id INTEGER NOT NULL,
                 telefone TEXT,
                 email TEXT NOT NULL,
-                senha TEXT NOT NULL,
                 senha_hash TEXT NOT NULL,
                 saldo INTEGER,
                 divida INTEGER,
 
                 FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (banco_id) REFERENCES bancos(id)
                     ON DELETE CASCADE
-        )
-        """)
 
-def salvar_usuario(obj_usuario):
+            )
+            """)
+
+def salvar_usuario(usuario):
     with conectar() as conexao:
         conexao.execute("""
             INSERT INTO usuarios
-            (pessoa_id, telefone, email, senha, senha_hash, saldo, divida)
+            (pessoa_id, banco_id, telefone, email, senha_hash, saldo, divida)
             VALUES (?, ?, ?, ?, ?, ?, ?)""", (
-                obj_usuario.pessoa_id,
-                obj_usuario.telefone,
-                obj_usuario.email,
-                obj_usuario.senha,
-                obj_usuario.senha_hash,
-                obj_usuario.saldo,
-                obj_usuario.divida
-        ))
+                usuario.pessoa_id,
+                usuario.banco_id,
+                usuario.telefone,
+                usuario.email,
+                usuario.senha_hash,
+                usuario.saldo,
+                usuario.divida
+            ))
 
 def deletar_usuario(usuarioID): # vai apagar todos os usuarios dependentes da pessoa
     with conectar() as conexao:
         conexao.execute("""
-DELETE FROM usuarios WHERE id = ?
-""", (usuarioID,))
+            DELETE FROM usuarios WHERE id = ?
+            """, (usuarioID,))
         
 def buscar_usuario(usuarioID):
     with conectar() as conexao:
         usuario_busca = conexao.execute("""
-        SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
-        FROM usuarios AS u
-        JOIN pessoas AS p
-            ON u.pessoa_id = p.id
-        WHERE u.id = ?
-        """, (usuarioID,)).fetchone()
+            SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
+            FROM usuarios AS u
+            JOIN pessoas AS p
+                ON u.pessoa_id = p.id
+            WHERE u.id = ?
+            """, (usuarioID,)).fetchone()
     u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = usuario_busca
     
     print(f"""
@@ -69,22 +72,40 @@ def buscar_usuario(usuarioID):
 ================================
 """)
         
-def listar_usuario(): 
-    with conectar() as conexao:
-        usuario_lista = conexao.execute("""
-                SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
-                FROM usuarios AS u
-                JOIN pessoas AS p
-                    ON u.pessoa_id = p.id;
-            """).fetchall()
+def listar_usuario(pessoaID=None, bancoID=None): # pode pesquisar os usuarios ligados a uma pessoa ou banco
+    query = """
+    SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome AS pessoa_nome, p.cpf, p.idade, p.genero, b.nome AS banco_nome
+    FROM usuarios as u
+    JOIN pessoas as p
+        ON u.pessoa_id = p.id
+    JOIN bancos as b
+        ON u.banco_id = b.id
+    """
+    parametros=[]
+    filtros=[]
 
+    if pessoaID is not None:
+        parametros.append(pessoaID)
+        filtros.append("u.pessoa_id = ?")
+    if bancoID is not None:
+        parametros.append(bancoID)
+        filtros.append("u.banco_id = ?")
+
+    if filtros:
+        query += " WHERE " + " AND ".join(filtros)
+
+    with conectar() as conexao:
+        usuario_lista = conexao.execute(query, parametros).fetchall()
+    
     for user in usuario_lista:
-        u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = user
+        u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero, b_nome = user
 
         print(f"""
 ================================
 |   DADOS DO USUARIO  ID: {u_id:<5}|
 ================================
+|                              |
+|   BANCO: {b_nome:<20}|
 |                              |
 |   Nome: {nome:<21}|  
 |   Idade: {str(idade) + " anos":<20}|

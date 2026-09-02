@@ -1,6 +1,6 @@
 from .conexão import conectar
 
-def criar_tabela_pessoa():
+def criar_tabela_pessoas():
     with conectar() as conexao:
         conexao.execute("""
             CREATE TABLE IF NOT EXISTS pessoas (
@@ -9,12 +9,12 @@ def criar_tabela_pessoa():
                 cpf TEXT UNIQUE NOT NULL,
                 idade INTEGER NOT NULL,
                 genero TEXT
-            )
+            );
             """)
 
 def salvar_pessoa(pessoa):
     with conectar() as conexao:
-        conexao.execute("""
+        cursor=conexao.execute("""
             INSERT INTO pessoas 
             (nome, cpf, idade, genero)
             VALUES (?, ?, ?, ?)
@@ -24,6 +24,7 @@ def salvar_pessoa(pessoa):
                 pessoa.idade,
                 pessoa.genero
             ))
+        return cursor.lastrowid
 
 def deletar_pessoa(pessoaCpf):
     with conectar() as conexao:
