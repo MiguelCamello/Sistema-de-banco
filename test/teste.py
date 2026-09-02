@@ -159,7 +159,7 @@ def gerar_dados(
 
         email = f"usuario{i + 1}@email.com"
 
-        senha = "123456"
+        senha = str(random.randint(10000, 99999))
 
         usuario = Usuario(
             pessoa_id,
@@ -191,15 +191,18 @@ def gerar_dados(
 
         banco_id = random.choice(bancos_ids)
 
+        telefone = f"1199{random.randint(1000000, 9999999)}"
+
         email = f"funcionario{i + 1}@banco.com"
 
-        senha = "123456"
+        senha = str(random.randint(10000, 99999))
 
         salario = random.randint(2000, 10000)
 
         funcionario = Funcionario(
             pessoa_id,
             banco_id,
+            telefone,
             email,
             senha,
             salario

@@ -7,6 +7,7 @@ def criar_tabela_funcionarios():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 pessoa_id INTEGER NOT NULL,
                 banco_id INTEGER NOT NULL,
+                telefone TEXT NOT NULL,
                 emailStaff TEXT NOT NULL,
                 senhaStaff_hash TEXT NOT NULL,
                 salario INTEGER,
@@ -22,12 +23,54 @@ def salvar_funcionario(funcionario):
     with conectar() as conexao:
         conexao.execute("""
             INSERT INTO funcionarios 
-            (pessoa_id, banco_id, emailStaff, senhaStaff_hash, salario)
-            VALUES (?, ?, ?, ?, ?)
+            (pessoa_id, banco_id, telefone, emailStaff, senhaStaff_hash, salario)
+            VALUES (?, ?, ?, ?, ?, ?)
             """, (
                 funcionario.pessoa_id,
                 funcionario.banco_id,
+                funcionario.telefone,
                 funcionario.emailStaff,
                 funcionario.senhaStaff_hash,
                 funcionario.salario
             ))
+        
+def deletar_funcionario(funcionarioID):
+    with conectar() as conexao:
+        conexao.execute("""
+            DELETE FROM funcionarios
+            WHERE id = ?;
+        """,(funcionarioID,))
+        
+def buscar_funcionario(funcionarioID):
+    with conectar() as conexao:
+        funcionario_busca = conexao.execute("""
+        SELECT f.id, f.telefone, f.emailStaff, f.senhaStaff_hash, f.salario, p.nome AS pessoa_nome, p.cpf, p.idade, p.genero, b.nome AS banco_nome
+        FROM funcionarios AS f
+        JOIN pessoas AS p
+            ON f.pessoa_id = p.id
+        JOIN bancos AS b
+            ON f.banco_id = b.id
+        WHERE funcionario_id = ?
+""", (funcionarioID,)).fetchone()
+        
+        f_id, telefone, emailStaff, senhaStaff_hash, salario, p_nome, cpf, idade, genero, b_nome = funcionario_busca
+
+        print(f"""
+================================
+|   DADOS DO STAFF  ID: {f_id:<5}|
+================================
+|                              |
+|   BANCO: {b_nome:<20}|
+|                              |
+|   Nome: {p_nome:<21}|  
+|   Idade: {str(idade) + " anos":<20}|
+|   Genero: {genero:<19}|
+|   CPF: {cpf:<22}|
+|   Telefone: {telefone:<17}|
+|   Email: {emailStaff:<20}|
+|   Senha_Hash:                |
+|   {senhaStaff_hash:<27}|
+|   saldo: {salario:<20}|
+|                              |
+================================
+""")
