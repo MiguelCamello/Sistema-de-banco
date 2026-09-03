@@ -1,10 +1,10 @@
-from utils import hasher
+from utils import hasher, formatar_telefone
 
 class Usuario:
     def __init__(self, pessoa_id, banco_id, telefone, email, senha):
         self.pessoa_id = pessoa_id
         self.banco_id = banco_id
-        self.telefone = telefone
+        self.telefone = formatar_telefone(str(telefone))
         self.email = email
         self.senha_hash = hasher(senha)
         self.saldo = 0

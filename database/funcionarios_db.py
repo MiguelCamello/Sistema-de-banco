@@ -36,14 +36,11 @@ def salvar_funcionario(funcionario):
         
 def deletar_funcionario(funcionarioID):
     with conectar() as conexao:
-        conexao.execute("""
-            DELETE FROM funcionarios
-            WHERE id = ?;
-        """,(funcionarioID,))
+        conexao.execute("DELETE FROM funcionarios WHERE id = ?", (funcionarioID,))
         
 def buscar_funcionario(funcionarioID):
     with conectar() as conexao:
-        funcionario_busca = conexao.execute("""
+        f_busca = conexao.execute("""
         SELECT f.id, f.telefone, f.emailStaff, f.senhaStaff_hash, f.salario, p.nome AS pessoa_nome, p.cpf, p.idade, p.genero, b.nome AS banco_nome
         FROM funcionarios AS f
         JOIN pessoas AS p
@@ -53,7 +50,7 @@ def buscar_funcionario(funcionarioID):
         WHERE funcionario_id = ?
 """, (funcionarioID,)).fetchone()
         
-        f_id, telefone, emailStaff, senhaStaff_hash, salario, p_nome, cpf, idade, genero, b_nome = funcionario_busca
+        f_id, telefone, emailStaff, senhaStaff_hash, salario, p_nome, cpf, idade, genero, b_nome = f_busca
 
         print(f"""
 ================================
@@ -71,6 +68,56 @@ def buscar_funcionario(funcionarioID):
 |   Senha_Hash:                |
 |   {senhaStaff_hash:<27}|
 |   saldo: {salario:<20}|
+|                              |
+================================
+""")
+
+
+def listar_funcionarios(pessoaID=None, bancoID=None):
+    query = """
+        SELECT f.id, f.telefone, f.emailStaff, f.senhaStaff_hash, f.salario, p.nome, p.cpf, p.idade, p.genero, b.nome
+        FROM funcionarios AS f
+        JOIN pessoas AS p
+            ON f.pessoa_id = p.id
+        JOIN bancos AS b
+            ON f.banco_id = b.id
+        """
+    parametros = []
+    filtros = []
+
+    if pessoaID is not None:
+        parametros.append(pessoaID)
+        filtros.append("pessoa_id = ?")
+
+    if bancoID is not None:
+        parametros.append(bancoID)
+        filtros.append("banco_id = ?")
+
+    if filtros:
+        query += " WHERE " + " AND ".join(filtros)
+
+    with conectar() as conexao:
+        f_lista = conexao.execute(query, parametros).fetchall()
+
+    for staff in f_lista:
+        f_id, telefone, emailStaff, senhaStaff_hash, salario, p_nome, cpf, idade, genero, b_nome = staff
+
+        print(f"""
+================================
+|   DADOS DO STAFF  ID: {f_id:<5}|
+================================
+|                              |
+|   BANCO: {b_nome:<20}|
+|                              |
+|   Nome: {p_nome:<21}|  
+|   Idade: {str(idade) + " anos":<20}|
+|   Genero: {genero:<19}|
+|   CPF: {cpf:<22}|
+|   Telefone: {telefone:<17}|
+|   Email: {emailStaff:<20}|
+|   SenhaStaff_Hash:            |
+|   {senhaStaff_hash:<27}|
+|   salario: {salario:<18}|
 |                              |
 ================================
 """)

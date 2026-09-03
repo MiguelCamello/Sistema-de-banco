@@ -1,10 +1,10 @@
-from utils import hasher
+from utils import hasher, formatar_telefone
 
 class Funcionario:
     def __init__(self, pessoa_id, banco_id, telefone, emailStaff, senhaStaff, salario):
         self.pessoa_id = pessoa_id
         self.banco_id = banco_id
-        self.telefone = telefone
+        self.telefone = formatar_telefone(str(telefone))
         self.emailStaff = emailStaff
         self.senhaStaff_hash = hasher(senhaStaff)
         self.salario = int(salario)

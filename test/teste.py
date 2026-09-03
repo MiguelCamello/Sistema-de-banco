@@ -55,7 +55,9 @@ def gerar_dados(
         "Santander",
         "Itaú",
         "Bradesco",
-        "Nubank"
+        "Nubank",
+        "Inter",
+        "NGCash"
     ]
 
     bancos_ids = []
@@ -77,6 +79,12 @@ def gerar_dados(
 
     nomes = [
         "Miguel",
+        "Manoela",
+        "Kesia",
+        "Perolla",
+        "Samuel",
+        "Valmir",
+        "Enzo",
         "João",
         "Pedro",
         "Lucas",
@@ -99,6 +107,11 @@ def gerar_dados(
     ]
 
     sobrenomes = [
+        "Aguiar",
+        "Vitória",
+        "Lima",
+        "Camello",
+        "Aparecida",
         "Silva",
         "Santos",
         "Oliveira",
@@ -107,8 +120,7 @@ def gerar_dados(
         "Costa",
         "Rodrigues",
         "Almeida",
-        "Nascimento",
-        "Lima"
+        "Nascimento"
     ]
 
     generos = [
@@ -155,7 +167,7 @@ def gerar_dados(
 
         banco_id = random.choice(bancos_ids)
 
-        telefone = f"1199{random.randint(1000000, 9999999)}"
+        telefone = f"1499{random.randint(1000000, 9999999)}"
 
         email = f"usuario{i + 1}@email.com"
 
@@ -191,7 +203,7 @@ def gerar_dados(
 
         banco_id = random.choice(bancos_ids)
 
-        telefone = f"1199{random.randint(1000000, 9999999)}"
+        telefone = f"1499{random.randint(1000000, 9999999)}"
 
         email = f"funcionario{i + 1}@banco.com"
 

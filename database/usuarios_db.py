@@ -36,22 +36,20 @@ def salvar_usuario(usuario):
                 usuario.divida
             ))
 
-def deletar_usuario(usuarioID): # vai apagar todos os usuarios dependentes da pessoa
+def deletar_usuario(usuarioID): # vai apagar todos os usuarios dependentes da pessoa, cuidado!
     with conectar() as conexao:
-        conexao.execute("""
-            DELETE FROM usuarios WHERE id = ?
-            """, (usuarioID,))
+        conexao.execute("DELETE FROM usuarios WHERE id = ?", (usuarioID,))
         
 def buscar_usuario(usuarioID):
     with conectar() as conexao:
-        usuario_busca = conexao.execute("""
+        u_busca = conexao.execute("""
             SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome, p.cpf, p.idade, p.genero
             FROM usuarios AS u
             JOIN pessoas AS p
                 ON u.pessoa_id = p.id
             WHERE u.id = ?
             """, (usuarioID,)).fetchone()
-    u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = usuario_busca
+    u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero = u_busca
     
     print(f"""
 ================================
@@ -72,15 +70,15 @@ def buscar_usuario(usuarioID):
 ================================
 """)
         
-def listar_usuario(pessoaID=None, bancoID=None): # pode pesquisar os usuarios ligados a uma pessoa ou banco
+def listar_usuarios(pessoaID=None, bancoID=None): # pode pesquisar os usuarios ligados a uma pessoa ou banco
     query = """
-    SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome AS pessoa_nome, p.cpf, p.idade, p.genero, b.nome AS banco_nome
-    FROM usuarios as u
-    JOIN pessoas as p
-        ON u.pessoa_id = p.id
-    JOIN bancos as b
-        ON u.banco_id = b.id
-    """
+        SELECT u.id, u.telefone, u.email, u.senha_hash, u.saldo, u.divida, p.nome AS pessoa_nome, p.cpf, p.idade, p.genero, b.nome AS banco_nome
+        FROM usuarios as u
+        JOIN pessoas as p
+            ON u.pessoa_id = p.id
+        JOIN bancos as b
+            ON u.banco_id = b.id
+        """
     parametros=[]
     filtros=[]
 
@@ -95,9 +93,9 @@ def listar_usuario(pessoaID=None, bancoID=None): # pode pesquisar os usuarios li
         query += " WHERE " + " AND ".join(filtros)
 
     with conectar() as conexao:
-        usuario_lista = conexao.execute(query, parametros).fetchall()
+        u_lista = conexao.execute(query, parametros).fetchall()
     
-    for user in usuario_lista:
+    for user in u_lista:
         u_id, telefone, email, senha_hash, saldo, divida, nome, cpf, idade, genero, b_nome = user
 
         print(f"""

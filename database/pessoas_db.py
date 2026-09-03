@@ -26,21 +26,17 @@ def salvar_pessoa(pessoa):
             ))
         return cursor.lastrowid
 
-def deletar_pessoa(pessoaCpf):
+def deletar_pessoa(pessoaCPF):
     with conectar() as conexao:
-        conexao.execute("""
-            DELETE FROM pessoas WHERE cpf = ?
-            """, (pessoaCpf,))
+        conexao.execute("DELETE FROM pessoas WHERE cpf = ?", (pessoaCPF,))
 
-def listar_pessoas():
+
+def buscar_pessoa(pessoaCPF):
     with conectar() as conexao:
-        lista = conexao.execute("""
-            SELECT * FROM pessoas
-            """).fetchall()
-            
-        for pessoa in lista:
-            p_id, nome, cpf, idade, genero = pessoa
-            print(f"""
+        p_busca = conexao.execute("SELECT * FROM pessoas WHERE cpf = ?", (pessoaCPF,)).fetchone()
+    p_id, nome, cpf, idade, genero = p_busca
+
+    print(f"""
 ================================
 |   DADOS DA PESSOA   ID: {p_id:<5}|
 ================================
@@ -53,13 +49,13 @@ def listar_pessoas():
 ================================
 """)
 
-def buscar_pessoa(pessoaCPF):
+def listar_pessoas():
     with conectar() as conexao:
-        pessoa_busca = conexao.execute("""
-            SELECT * FROM pessoas WHERE cpf = ?
-            """, (pessoaCPF,)).fetchone()
-    p_id, nome, cpf, idade, genero = pessoa_busca
-    print(f"""
+        p_lista = conexao.execute("SELECT * FROM pessoas").fetchall()
+
+        for pessoa in p_lista:
+            p_id, nome, cpf, idade, genero = pessoa
+            print(f"""
 ================================
 |   DADOS DA PESSOA   ID: {p_id:<5}|
 ================================
